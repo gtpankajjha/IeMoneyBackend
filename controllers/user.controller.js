@@ -2,14 +2,40 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 
-
 //Get All Users
 exports.getAllUsers = async function (req, res) {
-    const data = await User.find();
-    res.status(200).json(data);
-  };
+  const data = await User.find();
+  res.status(200).json(data);
+};
 
-  
+// get data by ID
+exports.getUserById = function (req, res) {
+  let userID = req.body.userID;
+  User.findById(userID)
+    .then((user) => {
+      res.status(200).json({ data: user });
+    })
+    .catch((err) => {
+      res.status(400).json({
+        error: err,
+      });
+    });
+};
+
+exports.getUserByValue = function (value) {
+  User.findOne({ value })
+    .then((user) => {
+      if (user) {
+        console.log("User found:", user);
+      } else {
+        console.log("User not found");
+      }
+    })
+    .catch((error) => {
+      console.error("Error finding user:", error);
+    });
+};
+
 // Register User
 exports.registerUser = async function (req, res) {
   const data = req.body;
@@ -17,7 +43,7 @@ exports.registerUser = async function (req, res) {
 
   const {
     name,
-    phoneNumber,
+    mobileNumber,
     email,
     password,
     setPassword,
@@ -28,6 +54,8 @@ exports.registerUser = async function (req, res) {
     gender,
     kyc,
     acceptTerms,
+    IE_Points,
+    IE_Vouchers
   } = data;
 
   await bcrypt
@@ -38,18 +66,18 @@ exports.registerUser = async function (req, res) {
     .then((hash) => {
       const hashedPassword = hash;
 
-      if (!name || !email || !password || !phoneNumber || !userType) {
+      if (!name || !email || !password || !mobileNumber || !userType) {
         res.status(400).send({ error: "All fields are required", data });
       } else {
         //   find if user exists
-        User.findOne({ phoneNumber }).then((user) => {
+        User.findOne({ mobileNumber }).then((user) => {
           if (user) {
             error = "User Already Exists";
             return res.status(400).json({ error });
           } else {
             const newUser = new User({
               name,
-              phoneNumber,
+              mobileNumber,
               email,
               password: hashedPassword,
               setPassword,
@@ -60,6 +88,8 @@ exports.registerUser = async function (req, res) {
               gender,
               kyc,
               acceptTerms,
+              IE_Points,
+              IE_Vouchers
             });
 
             const response = User.create(newUser);
@@ -75,76 +105,73 @@ exports.registerUser = async function (req, res) {
 
 // Login User
 exports.loginUser = async function (req, res) {
-    const { phoneNumber, password } = req.body;
-    console.log("login data: ", req.body);
-  
-    User.findOne({ phoneNumber })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({ error: "User Not Found" });
-        } else {
-          //Check password
-          bcrypt.compare(password, user.password).then((isMatch) => {
-            if (isMatch) {
-              //User matched
-              res.status(200).json({ success: "true", data: user });
-  
-              //Create JWT Payload
-              // const payload = {
-              //   id: user.id,
-              //   name: user.name,
-              //   email: user.email,
-              //   userType: user.userType,
-              //   mobile: user.mobile,
-              // };
-              // //Sign Token
-              // jwt.sign(payload, keys.secretOrKey, (err, token) => {
-              //   res.json({
-              //     success: true,
-              //     token: "Bearer " + token,
-              //     payload: payload,
-              //   });
-              // });
-            } else {
-              error = "Password Incorrect";
-              return res.status(400).json(error);
-            }
-          });
-        }
-      })
-      .catch((err) => res.status(404).json({ error: err }));
-  };
+  const { mobileNumber, password } = req.body;
+  console.log("login data: ", req.body);
 
+  User.findOne({ mobileNumber })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User Not Found" });
+      } else {
+        //Check password
+        bcrypt.compare(password, user.password).then((isMatch) => {
+          if (isMatch) {
+            //User matched
+            res.status(200).json({ success: "true", data: user });
 
-  
+            //Create JWT Payload
+            // const payload = {
+            //   id: user.id,
+            //   name: user.name,
+            //   email: user.email,
+            //   userType: user.userType,
+            //   mobile: user.mobile,
+            // };
+            // //Sign Token
+            // jwt.sign(payload, keys.secretOrKey, (err, token) => {
+            //   res.json({
+            //     success: true,
+            //     token: "Bearer " + token,
+            //     payload: payload,
+            //   });
+            // });
+          } else {
+            error = "Password Incorrect";
+            return res.status(400).json(error);
+          }
+        });
+      }
+    })
+    .catch((err) => res.status(404).json({ error: err }));
+};
+
 // Set PIN details
 exports.setPin = function (req, res) {
-    // let data = req.body;
-    let updatedUserData = req.body;
-  
-    // let updatedUserData = {
-    //   first_name: data.first_name,
-    //   last_name: data.last_name,
-    //   email: data.email,
-    //   password: data.password,
-    //   mobile: data.mobile,
-    //   userType: data.userType,
-    //   acceptTerms: data.acceptTerms,
-    //   about: data.about,
-    //   kyc: data.kyc,
-    // };
-  
-    User.findByIdAndUpdate(updatedUserData.userId, { $set: updatedUserData })
-      .then((user) => {
-        res.status(200).json({
-          message: "Updated Successfully!",
-          data: updatedUserData,
-        });
-      })
-      .catch((err) => {
-        res.json({
-          error: err,
-        });
+  // let data = req.body;
+  let updatedUserData = req.body;
+
+  // let updatedUserData = {
+  //   first_name: data.first_name,
+  //   last_name: data.last_name,
+  //   email: data.email,
+  //   password: data.password,
+  //   mobile: data.mobile,
+  //   userType: data.userType,
+  //   acceptTerms: data.acceptTerms,
+  //   about: data.about,
+  //   kyc: data.kyc,
+  // };
+
+  User.findByIdAndUpdate(updatedUserData.userId, { $set: updatedUserData })
+    .then((user) => {
+      res.status(200).json({
+        message: "Updated Successfully!",
+        data: updatedUserData,
       });
-  };
-  
+    })
+    .catch((err) => {
+      res.json({
+        error: err,
+      });
+    });
+};

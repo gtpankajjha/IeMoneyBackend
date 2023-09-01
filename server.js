@@ -13,10 +13,12 @@ app.use(bodyParser.json());
 //routes
 const testRoute = require("./routes/test.route");
 const userRoute = require("./routes/user.route");
+const transactionRoute = require("./routes/transaction.route");
 
 //api
 app.use("/test", testRoute);
 app.use("/user", userRoute);
+app.use("/transaction", transactionRoute);
 
 //Connect to Database
 db.connect();

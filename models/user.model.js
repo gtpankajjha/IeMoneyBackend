@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 let UserSchema = new Schema(
   {
     name: { type: String, required: true, max: 100 },
-    phoneNumber: { type: Number, required: true },
+    mobileNumber: { type: Number, required: true },
     email: { type: String, required: true, unique: true, trim: true }, //remove whitespace from begin and end
     password: {
       type: String,
