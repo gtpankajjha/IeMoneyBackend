@@ -114,3 +114,37 @@ exports.loginUser = async function (req, res) {
       })
       .catch((err) => res.status(404).json({ error: err }));
   };
+
+
+  
+// Set PIN details
+exports.setPin = function (req, res) {
+    // let data = req.body;
+    let updatedUserData = req.body;
+  
+    // let updatedUserData = {
+    //   first_name: data.first_name,
+    //   last_name: data.last_name,
+    //   email: data.email,
+    //   password: data.password,
+    //   mobile: data.mobile,
+    //   userType: data.userType,
+    //   acceptTerms: data.acceptTerms,
+    //   about: data.about,
+    //   kyc: data.kyc,
+    // };
+  
+    User.findByIdAndUpdate(updatedUserData.userId, { $set: updatedUserData })
+      .then((user) => {
+        res.status(200).json({
+          message: "Updated Successfully!",
+          data: updatedUserData,
+        });
+      })
+      .catch((err) => {
+        res.json({
+          error: err,
+        });
+      });
+  };
+  

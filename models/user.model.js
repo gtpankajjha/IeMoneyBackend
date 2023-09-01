@@ -27,6 +27,8 @@ let UserSchema = new Schema(
     },
     kyc: { type: Boolean, default: false },
     acceptTerms: { type: Boolean, required: true, default: false },
+    IE_Points: {type: Number, required: true, default: 0},
+    IE_Vouchers: {type: Number, required: true, default: 0}
   },
   { timestamps: true }
 );
