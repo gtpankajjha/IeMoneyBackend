@@ -3,10 +3,19 @@ const Schema = mongoose.Schema;
 
 let TransactionSchema = new Schema(
   {
+    // senderId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: true,
+    // },
+
     senderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      type: String,
+      required: true
+    },
+    receiverId: {
+      type: String,
+      required: true
     },
 
     receiverMobileNumber: {
