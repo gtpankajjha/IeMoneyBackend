@@ -175,3 +175,28 @@ exports.setPin = function (req, res) {
       });
     });
 };
+
+
+// verify PIN
+exports.verifyPin = async function (req, res) {
+  try {
+    const { userId, enteredPin } = req.body;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Compare the entered PIN with the stored PIN
+    if (enteredPin === user.pin) {
+      res.json({ message: 'PIN is valid' });
+    } else {
+      res.status(401).json({ error: 'Invalid PIN' });
+    }
+  } catch (error) {
+    console.error('Error verifying PIN:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}

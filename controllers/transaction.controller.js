@@ -18,7 +18,7 @@ exports.getAllTransaction = function (req, res) {
 exports.createTransaction = async function (req, res) {
   try {
     console.log("createTransaction", req.body);
-    const { senderId, receiverMobileNumber, amount, note } = req.body;
+    const { senderId, receiverMobileNumber, amount, note, userType } = req.body;
 
     // const name = "mohan"
     // user_controller.getUserByValue(name)
@@ -48,6 +48,7 @@ exports.createTransaction = async function (req, res) {
       receiverMobileNumber,
       amount,
       note,
+      userType
     });
 
      // Update sender and receiver gift points

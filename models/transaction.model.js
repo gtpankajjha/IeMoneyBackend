@@ -23,6 +23,13 @@ let TransactionSchema = new Schema(
       required: true,
     },
 
+    userType: {
+      type: String,
+      enum: ["INDIVIDUAL", "MERCHANT"],
+      default: "INDIVIDUAL",
+      required: true,
+    },
+
     amount: { type: Number, required: true },
     note: { type: String },
   },
