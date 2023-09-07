@@ -111,7 +111,8 @@ exports.loginUser = async function (req, res) {
   User.findOne({ mobileNumber })
     .then((user) => {
       if (!user) {
-        return res.status(404).json({ error: "User Not Found" });
+        // return res.status(404).json({ error: "User Not Found" });
+        return res.status(404).send(JSON.stringify({ error: "User Not Found" }));
       } else {
         //Check password
         bcrypt.compare(password, user.password).then((isMatch) => {
@@ -191,12 +192,32 @@ exports.verifyPin = async function (req, res) {
 
     // Compare the entered PIN with the stored PIN
     if (enteredPin === user.pin) {
-      res.json({ message: 'PIN is valid' });
+      res.json({ message: 'PIN is valid', valid: true });
     } else {
-      res.status(401).json({ error: 'Invalid PIN' });
+      res.status(401).json({ error: 'Invalid PIN', valid: false });
     }
   } catch (error) {
     console.error('Error verifying PIN:', error);
     res.status(500).json({ error: 'Server error' });
   }
 }
+
+
+// Set PIN details
+exports.updateUser = function (req, res) {
+  // let data = req.body;
+  let updatedUserData = req.body;
+
+  User.findByIdAndUpdate(updatedUserData.userId, { $set: updatedUserData })
+    .then((user) => {
+      res.status(200).json({
+        message: "Updated Successfully!",
+        data: updatedUserData,
+      });
+    })
+    .catch((err) => {
+      res.json({
+        error: err,
+      });
+    });
+};

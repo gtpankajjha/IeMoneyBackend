@@ -18,6 +18,11 @@ let TransactionSchema = new Schema(
       required: true
     },
 
+    receiverName: {
+      type: String,
+      required: true
+    },
+
     receiverMobileNumber: {
       type: Number,
       required: true,

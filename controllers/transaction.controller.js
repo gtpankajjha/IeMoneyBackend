@@ -35,35 +35,36 @@ exports.createTransaction = async function (req, res) {
     console.log("receiver IE_Points", receiver.IE_Points);
 
     if (!sender || !receiver) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     if (sender.IE_Points < amount) {
-      return res.status(400).json({ error: 'Insufficient IE points' });
+      return res.status(400).json({ error: "Insufficient IE points" });
     }
 
     let newTransaction = new Transaction({
       senderId,
       receiverId: receiver._id,
+      receiverName: receiver.name,
       receiverMobileNumber,
       amount,
       note,
-      userType
+      userType,
     });
 
-     // Update sender and receiver gift points
-     sender.IE_Points -= amount;
-     receiver.IE_Points += amount;
+    // Update sender and receiver gift points
+    sender.IE_Points -= amount;
+    receiver.IE_Points += amount;
 
-     await sender.save();
-     await receiver.save();
+    await sender.save();
+    await receiver.save();
     //  await transaction.save();
 
     Transaction.create(newTransaction)
       .then(() => {
         res.status(200).json({
           success: "true",
-          data: "created",
+          data: newTransaction,
         });
       })
       .catch((err) => {
