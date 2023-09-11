@@ -91,7 +91,6 @@ exports.getTransactionByTransactId = function (req, res) {
 
 exports.getTransactionsByUserId = function (req, res) {
   let userId = req.body.userId;
-  console.log("userId", userId);
   Transaction.find({ senderId: userId })
     .then((transaction) => {
       res.status(200).json({ data: transaction });
