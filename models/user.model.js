@@ -13,7 +13,7 @@ let UserSchema = new Schema(
     setPassword: { type: Boolean, default: false },
     userType: {
       type: String,
-      enum: ["INDIVIDUAL", "MERCHANT"],
+      enum: ["INDIVIDUAL", "MERCHANT", "ADMIN", "SUPERADMIN"],
       default: "INDIVIDUAL",
       required: true,
     },

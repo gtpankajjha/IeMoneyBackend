@@ -14,11 +14,13 @@ app.use(bodyParser.json());
 const testRoute = require("./routes/test.route");
 const userRoute = require("./routes/user.route");
 const transactionRoute = require("./routes/transaction.route");
+const adminRoute = require("./routes/admin.route");
 
 //api
 app.use("/test", testRoute);
 app.use("/user", userRoute);
 app.use("/transaction", transactionRoute);
+app.use("/admin", adminRoute);
 
 //Connect to Database
 db.connect();

@@ -91,7 +91,11 @@ exports.getTransactionByTransactId = function (req, res) {
 
 exports.getTransactionsByUserId = function (req, res) {
   let userId = req.body.userId;
-  Transaction.find({ senderId: userId })
+
+  // Transaction.find({ senderId: userId })
+  Transaction.find({
+    $or: [{ senderId: userId }, { receiverId: userId }],
+  })
     .then((transaction) => {
       res.status(200).json({ data: transaction });
     })
