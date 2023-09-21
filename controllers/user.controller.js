@@ -55,7 +55,7 @@ exports.registerUser = async function (req, res) {
     kyc,
     acceptTerms,
     IE_Points,
-    IE_Vouchers
+    IE_Vouchers,
   } = data;
 
   await bcrypt
@@ -89,7 +89,7 @@ exports.registerUser = async function (req, res) {
               kyc,
               acceptTerms,
               IE_Points,
-              IE_Vouchers
+              IE_Vouchers,
             });
 
             const response = User.create(newUser);
@@ -112,7 +112,9 @@ exports.loginUser = async function (req, res) {
     .then((user) => {
       if (!user) {
         // return res.status(404).json({ error: "User Not Found" });
-        return res.status(404).send(JSON.stringify({ error: "User Not Found" }));
+        return res
+          .status(404)
+          .send(JSON.stringify({ error: "User Not Found" }));
       } else {
         //Check password
         bcrypt.compare(password, user.password).then((isMatch) => {
@@ -177,7 +179,6 @@ exports.setPin = function (req, res) {
     });
 };
 
-
 // verify PIN
 exports.verifyPin = async function (req, res) {
   try {
@@ -187,23 +188,22 @@ exports.verifyPin = async function (req, res) {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Compare the entered PIN with the stored PIN
     if (enteredPin === user.pin) {
-      res.json({ message: 'PIN is valid', valid: true });
+      res.json({ message: "PIN is valid", valid: true });
     } else {
-      res.status(401).json({ error: 'Invalid PIN', valid: false });
+      res.status(401).json({ error: "Invalid PIN", valid: false });
     }
   } catch (error) {
-    console.error('Error verifying PIN:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error verifying PIN:", error);
+    res.status(500).json({ error: "Server error" });
   }
-}
+};
 
-
-// Set PIN details
+// Update user details
 exports.updateUser = function (req, res) {
   // let data = req.body;
   let updatedUserData = req.body;
@@ -217,6 +217,23 @@ exports.updateUser = function (req, res) {
     })
     .catch((err) => {
       res.json({
+        error: err,
+      });
+    });
+};
+
+// delete
+exports.deleteUser = function (req, res) {
+  let userId = req.body.userId;
+
+  User.findByIdAndRemove(userId)
+    .then(() => {
+      res.status(200).json({
+        message: "Deleted Successfully!",
+      });
+    })
+    .catch((err) => {
+      req.json({
         error: err,
       });
     });

@@ -5,12 +5,12 @@ let UserSchema = new Schema(
   {
     name: { type: String, required: true, max: 100 },
     mobileNumber: { type: Number, required: true },
-    email: { type: String, required: true, unique: true, trim: true }, //remove whitespace from begin and end
+    email: { type: String, required: true }, //remove whitespace from begin and end
     password: {
       type: String,
       required: true,
     },
-    setPassword: {type: Boolean, default: false},
+    setPassword: { type: Boolean, default: false },
     userType: {
       type: String,
       enum: ["INDIVIDUAL", "MERCHANT"],
@@ -25,10 +25,13 @@ let UserSchema = new Schema(
       enum: ["Male", "Female", "Other"], // Use an enum for specific values
       required: true,
     },
+    address: {
+      type: String,
+    },
     kyc: { type: Boolean, default: false },
     acceptTerms: { type: Boolean, required: true, default: false },
-    IE_Points: {type: Number, required: true, default: 0},
-    IE_Vouchers: {type: Number, required: true, default: 0}
+    IE_Points: { type: Number, required: true, default: 0 },
+    IE_Vouchers: { type: Number, required: true, default: 0 },
   },
   { timestamps: true }
 );
