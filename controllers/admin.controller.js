@@ -227,7 +227,7 @@ exports.setPin = function (req, res) {
 };
 
 // -------------------------------Transactions--------------------------
-// create New transaction
+// create New transaction or send IE_Points
 exports.createNewTransaction = async function (req, res) {
   try {
     console.log("createTransaction", req.body);
@@ -322,4 +322,60 @@ exports.getTransactionsByUserId = function (req, res) {
         error: err,
       });
     });
+};
+
+//  send IE_Vouchers
+exports.sendVouchers = async function (req, res) {
+  try {
+    const { senderId, receiverMobileNumber, voucher, note, userType } =
+      req.body;
+
+    const receiver = await User.findOne({
+      mobileNumber: receiverMobileNumber,
+    }).exec();
+
+    const sender = await User.findOne({
+      _id: senderId,
+    }).exec();
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (sender.IE_Vouchers < voucher) {
+      return res.status(400).json({ error: "Insufficient IE_Vouchers" });
+    }
+
+    let newTransaction = new Transaction({
+      senderId,
+      receiverId: receiver._id,
+      receiverName: receiver.name,
+      receiverMobileNumber,
+      voucher,
+      note,
+      userType,
+    });
+
+    // Update sender and receiver voucher points
+    sender.IE_Vouchers -= voucher;
+    receiver.IE_Vouchers += voucher;
+
+    await sender.save();
+    await receiver.save();
+    //  await transaction.save();
+
+    Transaction.create(newTransaction)
+      .then(() => {
+        res.status(200).json({
+          success: "true",
+          data: newTransaction,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({ error: err });
+      });
+  } catch (error) {
+    console.error("Error creating transaction:", error);
+    res.status(500).json({ error: "Server error" });
+  }
 };

@@ -11,16 +11,16 @@ let TransactionSchema = new Schema(
 
     senderId: {
       type: String,
-      required: true
+      required: true,
     },
     receiverId: {
       type: String,
-      required: true
+      required: true,
     },
 
     receiverName: {
       type: String,
-      required: true
+      required: true,
     },
 
     receiverMobileNumber: {
@@ -30,12 +30,13 @@ let TransactionSchema = new Schema(
 
     userType: {
       type: String,
-      enum: ["INDIVIDUAL", "MERCHANT"],
+      enum: ["INDIVIDUAL", "MERCHANT", "ADMIN", "SUPERADMIN"],
       default: "INDIVIDUAL",
       required: true,
     },
 
     amount: { type: Number, required: true },
+    voucher: { type: Number },
     note: { type: String },
   },
   { timestamps: true }

@@ -21,14 +21,6 @@ router.post(
   "/transaction-by-user-id",
   admin_controller.getTransactionsByUserId
 );
-
-// router.get("/all-users", user_controller.getAllUsers);
-// router.get("/userid", user_controller.getUserById);
-// router.post("/create", user_controller.registerUser);
-// router.post("/login", user_controller.loginUser);
-// router.post("/setpin", user_controller.setPin);
-// router.post("/verifypin", user_controller.verifyPin);
-// router.post("/updateUser", user_controller.updateUser);
-// router.post("/deleteUser", user_controller.deleteUser);
+router.post("/send-vouchers", admin_controller.sendVouchers);
 
 module.exports = router;
