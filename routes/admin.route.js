@@ -4,7 +4,7 @@ const router = express.Router();
 const admin_controller = require("../controllers/admin.controller");
 
 router.get("/all-users", admin_controller.getAllUsers);
-router.get("/user-by-id", admin_controller.getUserById);
+router.post("/user-by-id", admin_controller.getUserById);
 router.post("/user-by-mobile-number", admin_controller.getUserByMobileNumber);
 router.post("/register-new-user", admin_controller.registerNewUser);
 router.post("/update-user", admin_controller.updateUser);

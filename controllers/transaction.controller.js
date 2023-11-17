@@ -20,7 +20,7 @@ exports.createTransaction = async function (req, res) {
     console.log("createTransaction", req.body);
     const { senderId, receiverMobileNumber, amount, note, userType } = req.body;
 
-    // const name = "mohan"
+    // const name = "karthik"
     // user_controller.getUserByValue(name)
 
     const receiver = await User.findOne({

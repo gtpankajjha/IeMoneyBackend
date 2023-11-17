@@ -18,6 +18,10 @@ let TransactionSchema = new Schema(
       required: true,
     },
 
+    senderName: {
+      type: String,
+    },
+
     receiverName: {
       type: String,
       required: true,

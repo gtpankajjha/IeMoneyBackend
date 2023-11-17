@@ -19,11 +19,11 @@ let UserSchema = new Schema(
     },
     pin: { type: String, required: false },
     setPin: { type: Boolean, default: false },
-    age: { type: String, required: true },
+    age: { type: String, required: false },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"], // Use an enum for specific values
-      required: true,
+      required: false,
     },
     address: {
       type: String,
