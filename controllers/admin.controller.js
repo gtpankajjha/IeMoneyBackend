@@ -249,8 +249,6 @@ exports.createNewTransaction = async function (req, res) {
       return res.status(400).json({ error: "Insufficient IE points" });
     }
 
-    console.log("sender", sender);
-
     let newTransaction = new Transaction({
       senderId,
       receiverId: receiver._id,
