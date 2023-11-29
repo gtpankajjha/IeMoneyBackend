@@ -147,21 +147,53 @@ exports.updateUser = function (req, res) {
 };
 
 // delete user
-exports.deleteUser = function (req, res) {
-  let userId = req.body.userId;
+exports.deleteUser = async function (req, res) {
+  try {
+    const userId = req.body.userId;
 
-  User.findByIdAndRemove(userId)
-    .then(() => {
-      res.status(200).json({
-        message: "Deleted Successfully!",
+    // Check if userId is provided
+    if (!userId) {
+      return res.status(400).json({
+        error: "User ID is required for deletion",
       });
-    })
-    .catch((err) => {
-      req.json({
-        error: err,
+    }
+
+    // Use findByIdAndDelete instead of findByIdAndRemove
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    // Check if the user with the given ID exists
+    if (!deletedUser) {
+      return res.status(404).json({
+        error: "User not found",
       });
+    }
+
+    res.status(200).json({
+      message: "Deleted Successfully!",
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
 };
+
+// exports.deleteUser = function (req, res) {
+//   let userId = req.body.userId;
+
+//   User.findByIdAndRemove(userId)
+//     .then(() => {
+//       res.status(200).json({
+//         message: "Deleted Successfully!",
+//       });
+//     })
+//     .catch((err) => {
+//       req.json({
+//         error: err,
+//       });
+//     });
+// };
 
 // Login User admin
 exports.loginAdmin = async function (req, res) {
